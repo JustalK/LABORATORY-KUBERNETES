@@ -1,5 +1,139 @@
 # LABORATORY-KUBERNETES
 
+## How to setup a k8s cluster
+
+This is a long tutorial of how I setup k8s on two EC2. I will create one control-plane node and one worker node.
+
+Let's first setup the name of the host. It will be easier to know which terminal correspond to what.
+
+```bash
+$ sudo hostnamectl set-hostname k8s-control
+$ sudo hostnamectl set-hostname k8s-worker
+```
+
+![./documentation/1.png](./documentation/1.png)
+
+I add the name in the host file: /etc/hosts
+
+![./documentation/2.png](./documentation/2.png)
+
+The next step are basically written in the documentation:
+[Containerd prerequisites](https://kubernetes.io/docs/setup/production-environment/container-runtimes/#forwarding-ipv4-and-letting-iptables-see-bridged-traffic)
+
+The goal is to setup everything for installing the containerd
+
+```bash
+$ cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+```
+
+![./documentation/3.png](./documentation/3.png)
+
+```bash
+$ sudo modprobe overlay
+$ sudo modprobe br_netfilter
+```
+
+![./documentation/4.png](./documentation/4.png)
+
+```bash
+$ cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward                 = 1
+EOF
+```
+
+![./documentation/5.png](./documentation/5.png)
+
+```bash
+$ sudo sysctl --system
+```
+
+![./documentation/6.png](./documentation/6.png)
+
+Once done with the prerequisites, I install the containerd
+
+```bash
+$ sudo apt-get update && sudo apt-get install -y containerd
+```
+
+![./documentation/7.png](./documentation/7.png)
+
+```bash
+$ sudo mkdir -p /etc/containerd
+$ sudo containerd config default | sudo tee /etc/containerd/config.toml
+```
+
+![./documentation/9.png](./documentation/9.png)
+
+```bash
+$ sudo systemctl restart containerd
+$ sudo swapoff -a
+```
+
+![./documentation/10.png](./documentation/10.png)
+
+I install the dependency for kubeadm:
+
+```bash
+$ sudo apt-get update && sudo apt-get install -y apt-transport-https curl
+```
+
+![./documentation/11.png](./documentation/11.png)
+
+I now add the k8s repository to my list of repositories.
+
+```bash
+$ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+$ cat <<EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+deb https://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+```
+
+![./documentation/12.png](./documentation/12.png)
+
+Update and install k8s.
+
+```bash
+$ sudo apt-get update
+$ sudo apt-get install -y kubelet=1.24.0-00 kubeadm=1.24.0-00 kubectl=1.24.0-00
+```
+
+![./documentation/13.png](./documentation/13.png)
+
+I lock the versions.
+
+```bash
+sudo apt-mark hold kubelet kubeadm kubectl
+```
+
+![./documentation/14.png](./documentation/14.png)
+
+And finally, I initialize the cluster.
+
+```bash
+$ sudo kubeadm init --pod-network-cidr 192.168.0.0/16 --kubernetes-version 1.24.0
+```
+
+![./documentation/15.png](./documentation/15.png)
+
+Last step for creating the control plane, just copy paste the command written at the end of the previous screen.
+
+```bash
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+![./documentation/17.png](./documentation/17.png)
+
+The control plane node is now available.
+
+![./documentation/18.png](./documentation/18.png)
+
 ## Commands
 
 ```bash
