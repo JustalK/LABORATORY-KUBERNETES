@@ -110,6 +110,8 @@ I lock the versions.
 sudo apt-mark hold kubelet kubeadm kubectl
 ```
 
+**IMPORTANT**: All this previous step has to be done on all the node that will be include to our cluster!
+
 ![./documentation/14.png](./documentation/14.png)
 
 And finally, I initialize the cluster.
@@ -133,6 +135,30 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 The control plane node is now available.
 
 ![./documentation/18.png](./documentation/18.png)
+
+For enabling the communication between node, I will install the calico network add-on.
+
+```bash
+$ kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+```
+
+![./documentation/19.png](./documentation/19.png)
+
+I use the kubeadm API to join a node to my cluster.
+
+```bash
+$ kubeadm token create --print-join-command
+```
+
+![./documentation/20.png](./documentation/20.png)
+
+I copy and paste this command into my node.
+
+![./documentation/21.png](./documentation/21.png)
+
+And my two nodes are now availables.
+
+![./documentation/23.png](./documentation/23.png)
 
 ## Commands
 
