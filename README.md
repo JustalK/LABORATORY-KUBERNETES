@@ -2,6 +2,7 @@
 
 ## How to setup a k8s cluster
 
+<details><summary>How to setup a k8s cluster</summary>
 This is a long tutorial of how I setup k8s on two EC2. I will create one control-plane node and one worker node.
 
 Let's first setup the name of the host. It will be easier to know which terminal correspond to what.
@@ -159,6 +160,8 @@ I copy and paste this command into my node.
 And my two nodes are now availables.
 
 ![./documentation/23.png](./documentation/23.png)
+
+</details>
 
 ## Commands
 
