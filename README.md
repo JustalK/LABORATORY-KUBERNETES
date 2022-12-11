@@ -1,5 +1,7 @@
 # LABORATORY-KUBERNETES
 
+This repository is a little concentration of some information I want to keep about K8s. I have been training a lot for the CKA & CKS. I have learnt a lot of thing that could be really useful for me in the futur. For those who want to take the CKA too, I suggest you to be able to do the following if you want to pass it ;)
+
 ## How to setup a k8s cluster
 
 <details><summary>How to setup a k8s cluster</summary>
@@ -237,3 +239,6 @@ $ wc -l
 ## Links
 
 - [Explanation maxSurge & maxUnavailable](https://www.bluematador.com/blog/kubernetes-deployments-rolling-update-configuration)
+- [Example of questions](https://dev.to/subodev/50-questions-for-ckad-and-cka-exam-3bjm)
+- [Guides](https://github.com/David-VTUK/CKA-StudyGuide/tree/master/LabGuide)
+- [Killer.sh](https://www.youtube.com/watch?v=uUUwvPUcTBg)
